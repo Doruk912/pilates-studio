@@ -1,0 +1,70 @@
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>New Appointment</title>
+</head>
+<main layout:fragment="content">
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-lg">
+          <div class="card-header text-center">
+            <h3 class="font-weight-light">Appointment Information</h3>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>Important:</strong> Creating this appointment will decrement the customer's usage.
+              If the customer has only a single lesson left their purchase status will be set to USED
+            </div>
+            <form role="form" method="post" th:action="@{/appointments/new}" th:object="${appointment}">
+              <div class="mb-3">
+                <label for="customerName" class="form-label">Customer Name</label>
+                <select class="form-select" id="customerName" name="customer.id" th:field="*{customer.id}" required>
+                  <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('customer.id')}" class="text-danger" th:errors="*{customer.id}"></p>
+              </div>
+              <div class="mb-3">
+                <label for="trainerName" class="form-label">Trainer Name</label>
+                <select class="form-select" id="trainerName" name="trainer.id" th:field="*{trainer.id}">
+                  <option value="">-</option>
+                  <option th:each="trainer : ${trainers}" th:value="${trainer.id}" th:text="${trainer.name}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('trainer.id')}" class="text-danger" th:errors="*{trainer.id}"></p>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <select class="form-select" id="location" name="locationId" th:field="*{locationId}" required>
+                  <option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.id}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('locationId')}" class="text-danger" th:errors="*{locationId}"></p>
+              </div>
+              <div class="mb-3">
+                <label for="startTime" class="form-label">Start Time</label>
+                <input type="datetime-local" class="form-control" id="startTime" name="startTime" th:field="*{startTime}" required>
+                <p th:if="${#fields.hasErrors('startTime')}" class="text-danger" th:errors="*{startTime}"></p>
+              </div>
+              <div class="mb-3">
+                <label for="endTime" class="form-label">End Time</label>
+                <input type="datetime-local" class="form-control" id="endTime" name="endTime" th:field="*{endTime}" required>
+                <p th:if="${#fields.hasErrors('endTime')}" class="text-danger" th:errors="*{endTime}"></p>
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>
+                <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</html>

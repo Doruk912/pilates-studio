@@ -1,0 +1,43 @@
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Add Location</title>
+</head>
+<main layout:fragment="content">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="card-header text-center">
+                        <h3 class="font-weight-light">Location Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <form role="form" method="post" th:action="@{/locations/new}" th:object="${location}">
+                            <div class="mb-3">
+                                <label for="franchise" class="form-label">Franchise</label>
+                                <input type="text" class="form-control" id="franchise" name="franchise" th:field="*{franchise}" placeholder="Enter two-letter franchise code (Example: ML)">
+                                <p th:if="${#fields.hasErrors('franchise')}" class="text-danger" th:errors="*{franchise}"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="room" class="form-label">Room</label>
+                                <input type="text" class="form-control" id="room" name="room" th:field="*{room}" placeholder="Enter four-letter room code (Example: RM01)">
+                                <p th:if="${#fields.hasErrors('room')}" class="text-danger" th:errors="*{room}"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="slot" class="form-label">Slot</label>
+                                <input type="text" class="form-control" id="slot" name="slot" th:field="*{slot}" placeholder="Enter slot name (Example: Pilates1)">
+                                <p th:if="${#fields.hasErrors('slot')}" class="text-danger" th:errors="*{slot}"></p>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</html>

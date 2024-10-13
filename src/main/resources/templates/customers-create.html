@@ -1,0 +1,38 @@
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Add Customer</title>
+</head>
+<main layout:fragment="content">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="card-header text-center">
+                        <h3 class="font-weight-light">Customer Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <form role="form" method="post" th:action="@{/customers/new}" th:object="${customer}">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" name="name" th:field="*{name}">
+                                <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phone" th:field="*{phone}">
+                                <p th:if="${#fields.hasErrors('phone')}" class="text-danger" th:errors="*{phone}"></p>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</html>

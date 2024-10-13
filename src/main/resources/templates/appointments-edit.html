@@ -1,0 +1,74 @@
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Edit Appointment</title>
+</head>
+<main layout:fragment="content">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="card-header text-center">
+                        <h3 class="font-weight-light">Appointment Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <strong>Important:</strong> Creating an appointment will reduce the customer's usage.
+                            If the appointment is cancelled, you must manually return one usage to the customer.
+                        </div>
+                        <form role="form" method="post" th:action="@{/appointments/{appointmentId}/edit(appointmentId=${appointment.id})}" th:object="${appointment}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-3">
+                                <label for="trainerName" class="form-label">Trainer Name</label>
+                                <select class="form-select" id="trainerName" name="trainerName" th:field="*{trainerName}">
+                                    <option value="">-</option>
+                                    <option th:each="trainer : ${trainers}" th:value="${trainer.name}" th:text="${trainer.name}"></option>
+                                </select>
+                                <!--<p th:if="${#fields.hasErrors('trainer.id')}" class="text-danger" th:errors="*{trainer.id}"></p>-->
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <select class="form-select" id="location" name="locationId" th:field="*{locationId}" required>
+                                    <option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.id}"></option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('locationId')}" class="text-danger" th:errors="*{locationId}"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="startTime" class="form-label">Start Time</label>
+                                <input type="datetime-local" class="form-control" id="startTime" name="startTime" th:value="${formattedStartTime}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="endTime" class="form-label">End Time</label>
+                                <input type="datetime-local" class="form-control" id="endTime" name="endTime" th:value="${formattedEndTime}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="appointmentStatus" class="form-label">Status</label>
+                                <select class="form-select" id="appointmentStatus" name="appointmentStatus" th:field="*{appointmentStatus}" required>
+                                    <option th:value="PENDING_TRAINER" th:text="'PENDING_TRAINER'">PENDING_TRAINER</option>
+                                    <option th:value="SCHEDULED" th:text="'SCHEDULED'">SCHEDULED</option>
+                                    <option th:value="COMPLETED" th:text="'COMPLETED'">COMPLETED</option>
+                                    <option th:value="CANCELLED" th:text="'CANCELLED'">CANCELLED</option>
+                                    <option th:value="NO_SHOW" th:text="'NO_SHOW'">NO_SHOW</option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('appointmentStatus')}" class="text-danger" th:errors="*{appointmentStatus}"></p>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>
+                                <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</html>
