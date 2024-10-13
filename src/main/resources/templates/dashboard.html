@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Dashboard</title>
+    <script>
+        function fetchRooms(franchise) {
+            const roomSelect = document.getElementById('room');
+            roomSelect.innerHTML = '<option value="">Select Room</option>'; // Reset room options
+
+            if (franchise) {
+                fetch(`/rooms?franchise=${franchise}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(room => {
+                            const option = document.createElement('option');
+                            option.value = room;
+                            option.textContent = room;
+                            roomSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching rooms:', error));
+            }
+        }
+
+        function validateRoomScheduleForm() {
+            const franchise = document.getElementById('franchise').value;
+            const room = document.getElementById('room').value;
+            const date = document.getElementById('date').value;
+
+            if (!franchise || !room || !date) {
+                alert('Please select a franchise, room, and date.');
+                return false;
+            }
+            return true;
+        }
+
+        function validateTrainerScheduleForm() {
+            const trainer = document.getElementById('trainer').value;
+            const date = document.getElementById('trainerDate').value;
+
+            if (!trainer || !date) {
+                alert('Please select a trainer and date.');
+                return false;
+            }
+            return true;
+        }
+
+        function toggleSearchFields() {
+            const selectionMethod = document.getElementById('selectionMethod').value;
+            const customerSelectGroup = document.getElementById('customerSelectGroup');
+            const purchaseSelectGroup = document.getElementById('purchaseSelectGroup');
+
+            if (selectionMethod === 'customer') {
+                customerSelectGroup.style.display = 'block';
+                purchaseSelectGroup.style.display = 'none';
+            }else{
+                customerSelectGroup.style.display = 'none';
+                purchaseSelectGroup.style.display = 'block';
+            }
+        }
+
+    </script>
+</head>
+<main layout:fragment="content">
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">Active Appointments: <span th:text="${activeAppointments}"></span></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">Appointments Pending Trainer: <span
+                            th:text="${pendingTrainerAppointments}"></span></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">
+                        Total Customers: <span th:text="${totalCustomers}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-info text-white mb-4">
+                    <div class="card-body">
+                        Purchases In Use: <span th:text="${purchasesInUse}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row d-flex">
+            <!-- Room Schedule -->
+            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0 text-center">Room Schedule</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <form action="/downloadRoomSchedule" method="get" id="roomScheduleForm" target="_blank" onsubmit="return validateRoomScheduleForm()">
+                            <div class="form-group mb-3">
+                                <label for="franchise" class="form-label">Franchise:</label>
+                                <select id="franchise" name="franchise" class="form-control shadow-sm"
+                                        onchange="fetchRooms(this.value)">
+                                    <option value="">Select Franchise</option>
+                                    <option th:each="franchise : ${franchises}"
+                                            th:value="${franchise}"
+                                            th:text="${franchise}">Franchise Name
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="room" class="form-label">Room:</label>
+                                <select id="room" name="room" class="form-control shadow-sm">
+                                    <option value="">Select Room</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="date" class="form-label">Date:</label>
+                                <input type="date" id="date" name="date" class="form-control shadow-sm">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="roomScheduleForm">Download
+                            PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trainer Schedule -->
+            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0 text-center">Trainer Schedule</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <form action="/downloadTrainerSchedule" method="get" id="trainerScheduleForm" target="_blank" onsubmit="return validateTrainerScheduleForm()">
+                            <div class="form-group mb-3">
+                                <label for="trainer" class="form-label">Trainer:</label>
+                                <select id="trainer" name="trainer" class="form-control shadow-sm">
+                                    <option th:each="trainer : ${trainers}"
+                                            th:value="${trainer.id}"
+                                            th:text="${trainer.name}">Trainer Name
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="trainerDate" class="form-label">Date:</label>
+                                <input type="date" id="trainerDate" name="date" class="form-control shadow-sm">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="trainerScheduleForm">
+                            Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Package Details -->
+            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0 text-center">Customer Package Details</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <form action="/downloadCustomerPackageDetails" method="get" id="customerPackageForm" target="_blank">
+                            <!-- Select Method -->
+                            <div class="form-group mb-3">
+                                <label for="selectionMethod" class="form-label">Search By:</label>
+                                <select id="selectionMethod" name="selectionMethod" class="form-control shadow-sm" onchange="toggleSearchFields()">
+                                    <option value="customer">Customer Name</option>
+                                    <option value="purchase">Purchase ID</option>
+                                </select>
+                            </div>
+                            <!-- Customer Name Selection -->
+                            <div class="form-group mb-4" id="customerSelectGroup">
+                                <label for="customer" class="form-label">Customer:</label>
+                                <select id="customer" name="customer" class="form-control shadow-sm">
+                                    <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}">Customer Name</option>
+                                </select>
+                            </div>
+                            <!-- Purchase ID Selection -->
+                            <div class="form-group mb-4" id="purchaseSelectGroup" style="display:none;">
+                                <label for="purchase" class="form-label">Purchase ID:</label>
+                                <input type="number" id="purchase" name="purchase" class="form-control shadow-sm" placeholder="Enter Purchase ID" min="1">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="customerPackageForm">Download PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment List -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Appointment List
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer Name</th>
+                        <th>Trainer Name</th>
+                        <th>Location</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer Name</th>
+                        <th>Trainer Name</th>
+                        <th>Location</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr th:each="appointment : ${appointments}">
+                        <td th:text="${appointment.id}"></td>
+                        <td th:text="${appointment.customerName}"></td>
+                        <td th:text="${appointment.trainerName}"></td>
+                        <td th:text="${appointment.locationId}"></td>
+                        <td th:text="${#temporals.format(appointment.startTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(appointment.endTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${appointment.appointmentStatus}"></td>
+                        <td th:text="${appointment.description}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</html>

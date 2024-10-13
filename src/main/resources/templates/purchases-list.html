@@ -1,0 +1,77 @@
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Purchases List</title>
+</head>
+
+<main layout:fragment="content">
+    <div class="container-fluid px-4">
+        <div class="mt-4">
+            <div th:if="${successMessage}" class="alert alert-success">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+                <p th:text="${errorMessage}"></p>
+            </div>
+        </div>
+        <h1 class="mt-4">Purchases</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+            <li class="breadcrumb-item active">Purchases</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <span>This table displays the purchases from the database.</span>
+                <a class="btn btn-primary" th:href="@{/purchases/new}">New Purchase</a>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Purchase List
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer Name</th>
+                        <th>Lesson Count</th>
+                        <th>Package Status</th>
+                        <th>Payment Complete</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer Name</th>
+                        <th>Lesson Count</th>
+                        <th>Package Status</th>
+                        <th>Payment Complete</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr th:each="purchase : ${purchases}">
+                        <td th:text="${purchase.id}"></td>
+                        <td th:text="${purchase.customerName}"></td>
+                        <td th:text="${purchase.lessonCount}"></td>
+                        <td th:text="${purchase.packageStatus}"></td>
+                        <td th:text="${purchase.paymentComplete}"></td>
+                        <td th:text="${purchase.description}"></td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" th:href="@{/purchases/{id}/edit(id=${purchase.id})}">Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</html>
