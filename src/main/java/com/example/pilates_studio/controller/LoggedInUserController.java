@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class LoggedInUserController {
 
     @ModelAttribute
-    public void addUserDetailsToModel(Model model){
+    public void addUserDetailsToModel(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails){
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             model.addAttribute("loggedInUsername", userDetails.getUsername());
         }
     }
