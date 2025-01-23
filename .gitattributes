@@ -1,0 +1,2 @@
+# Mark all CSS files to be linguistically ignored
+*.css linguist-vendored
