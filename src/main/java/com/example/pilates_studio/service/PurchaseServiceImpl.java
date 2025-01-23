@@ -1,6 +1,5 @@
 package com.example.pilates_studio.service;
 
-import com.example.pilates_studio.dto.CustomerDto;
 import com.example.pilates_studio.dto.PurchaseDto;
 import com.example.pilates_studio.model.Customer;
 import com.example.pilates_studio.model.PackageStatus;
@@ -11,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,8 +84,19 @@ public class PurchaseServiceImpl implements PurchaseService{
         return purchaseRepository.existsById(purchaseId);
     }
 
+    @Override
+    public Purchase findUnpaidPurchaseIdByCustomerName(String customerName) {
+        Customer customer = customerRepository.findByName(customerName);
+        if(customer != null){
+            Purchase purchase = purchaseRepository.findFirstByCustomer_IdAndPaymentCompleteFalse(customer.getId());
+            return purchase;
+        }
+        System.out.println("Customer not found");
+        return null;
+    }
 
-    private PurchaseDto mapToPurchaseDto(Purchase purchase){
+
+    public PurchaseDto mapToPurchaseDto(Purchase purchase){
         return PurchaseDto.builder()
                 .id(purchase.getId())
                 .customerName(purchase.getCustomer().getName())
@@ -95,10 +104,12 @@ public class PurchaseServiceImpl implements PurchaseService{
                 .packageStatus(purchase.getPackageStatus())
                 .description(purchase.getDescription())
                 .lessonCount(purchase.getLessonCount())
+                .price(purchase.getPrice())
+                .amountDue(purchase.getAmountDue())
                 .build();
     }
 
-    private Purchase mapToPurchase(PurchaseDto purchaseDto){
+    public Purchase mapToPurchase(PurchaseDto purchaseDto){
         Customer customer = customerService.findCustomerByName(purchaseDto.getCustomerName());
         return Purchase.builder()
                 .id(purchaseDto.getId())
@@ -107,6 +118,8 @@ public class PurchaseServiceImpl implements PurchaseService{
                 .packageStatus(purchaseDto.getPackageStatus())
                 .description(purchaseDto.getDescription())
                 .lessonCount(purchaseDto.getLessonCount())
+                .price(purchaseDto.getPrice())
+                .amountDue(purchaseDto.getAmountDue())
                 .build();
     }
 

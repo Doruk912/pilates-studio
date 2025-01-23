@@ -125,5 +125,18 @@ public class DashboardController {
                 .body(new InputStreamResource(pdf));
     }
 
+    @GetMapping("/downloadPaymentDetails")
+    public ResponseEntity<InputStreamResource> downloadPaymentDetails(@RequestParam("purchaseId") Integer purchaseId){
+        ByteArrayInputStream pdf = pdfService.generatePaymentDetailsPdf(purchaseId);
 
+        HttpHeaders headers = new HttpHeaders();
+        String filename = "Purchase ID " + purchaseId + " Payment Details" + ".pdf";
+        headers.add("Content-Disposition", "inline; filename=" + filename);
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(pdf));
+    }
 }

@@ -21,4 +21,6 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
     Purchase findByCustomerIdAndPackageStatus(@Param("customerId") Integer customerId, @Param("packageStatus") PackageStatus packageStatus);
 
     int countByPackageStatus(PackageStatus packageStatus);
+
+    Purchase findFirstByCustomer_IdAndPaymentCompleteFalse(Integer id);
 }

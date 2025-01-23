@@ -2,7 +2,7 @@ package com.example.pilates_studio.service;
 
 import com.example.pilates_studio.dto.AppointmentDto;
 import com.example.pilates_studio.model.Appointment;
-import com.example.pilates_studio.model.Trainer;
+import com.example.pilates_studio.model.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,9 +15,13 @@ public interface AppointmentService {
 
     AppointmentDto findAppointmentById(Integer appointmentId);
 
+    Appointment findAppointment(Integer appointmentId);
+
     String findCustomerNameFromAppointmentId(Integer appointmentId);
 
     void updateAppointment(AppointmentDto appointmentDto);
+
+    void updateAppointment(Appointment appointment);
 
     boolean isSlotAvailable(String locationId, LocalDateTime startTime, LocalDateTime endTime);
 
@@ -34,4 +38,10 @@ public interface AppointmentService {
     List<AppointmentDto> findPackageAppointmentsByCustomerId(Integer customerId);
 
     List<AppointmentDto> findPackageAppointmentsByPurchaseId(Integer purchaseId);
+
+    void delete(Integer appointmentId);
+
+    void updateStatus(Integer id, AppointmentStatus appointmentStatus);
+
+    void assignTrainer(Integer appointmentId, Integer trainerId);
 }

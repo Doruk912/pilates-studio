@@ -16,15 +16,6 @@
                     <div class="card-body">
                         <form role="form" method="post" th:action="@{/purchases/{purchaseId}/edit(purchaseId=${purchase.id})}" th:object="${purchase}">
                             <input type="hidden" th:field="*{id}">
-                            <label class="form-label">Is Payment Complete?</label>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" id="paymentCompleteYes" name="paymentComplete" value="true" th:field="*{paymentComplete}">
-                                <label class="form-check-label" for="paymentCompleteYes">Yes</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" id="paymentCompleteNo" name="paymentComplete" value="false" th:field="*{paymentComplete}">
-                                <label class="form-check-label" for="paymentCompleteNo">No</label>
-                            </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>

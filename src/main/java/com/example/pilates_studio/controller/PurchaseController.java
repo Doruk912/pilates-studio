@@ -2,7 +2,6 @@ package com.example.pilates_studio.controller;
 
 import com.example.pilates_studio.dto.CustomerDto;
 import com.example.pilates_studio.dto.PurchaseDto;
-import com.example.pilates_studio.model.Customer;
 import com.example.pilates_studio.model.PackageStatus;
 import com.example.pilates_studio.model.Purchase;
 import com.example.pilates_studio.service.CustomerService;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -60,12 +60,14 @@ public class PurchaseController {
             return "purchases-create";
         }
 
-        PurchaseDto purchaseDto = new PurchaseDto(null, customerService.findCustomerById(purchase.getCustomer().getId()).getName(), purchase.isPaymentComplete(),PackageStatus.IN_USE, purchase.getDescription(), purchase.getLessonCount());
+        PurchaseDto purchaseDto = new PurchaseDto(null, customerService.findCustomerById(purchase.getCustomer().getId()).getName(), purchase.isPaymentComplete(), PackageStatus.IN_USE, purchase.getDescription(), purchase.getLessonCount(), purchase.getPrice(), purchase.getPrice());
         purchaseService.savePurchase(purchaseDto);
 
         CustomerDto customer = customerService.findCustomerById(purchase.getCustomer().getId());
         customer.setRemainingUsage(purchase.getLessonCount());
         customerService.updateCustomer(customer);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Purchase created successfully");
 
         return "redirect:/purchases";
     }
@@ -87,6 +89,9 @@ public class PurchaseController {
         purchaseDto.setCustomerName(purchase.getCustomerName());
         purchaseDto.setPackageStatus(purchase.getPackageStatus());
         purchaseDto.setLessonCount(purchase.getLessonCount());
+        purchaseDto.setPaymentComplete(purchase.getPaymentComplete());
+        purchaseDto.setAmountDue(purchase.getAmountDue());
+        purchaseDto.setPrice(purchase.getPrice());
         purchaseService.updatePurchase(purchaseDto);
         return "redirect:/purchases";
     }

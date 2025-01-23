@@ -24,4 +24,10 @@ public interface PurchaseService {
     Integer findInUsePurchaseIdByCustomerId(Integer id);
 
     boolean existsByPurchaseId(Integer purchaseId);
+
+    Purchase findUnpaidPurchaseIdByCustomerName(String customerName);
+
+    PurchaseDto mapToPurchaseDto(Purchase purchase);
+
+    Purchase mapToPurchase(PurchaseDto purchaseDto);
 }

@@ -21,14 +21,6 @@
                         <form role="form" method="post" th:action="@{/appointments/{appointmentId}/edit(appointmentId=${appointment.id})}" th:object="${appointment}">
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-3">
-                                <label for="trainerName" class="form-label">Trainer Name</label>
-                                <select class="form-select" id="trainerName" name="trainerName" th:field="*{trainerName}">
-                                    <option value="">-</option>
-                                    <option th:each="trainer : ${trainers}" th:value="${trainer.name}" th:text="${trainer.name}"></option>
-                                </select>
-                                <!--<p th:if="${#fields.hasErrors('trainer.id')}" class="text-danger" th:errors="*{trainer.id}"></p>-->
-                            </div>
-                            <div class="mb-3">
                                 <label for="location" class="form-label">Location</label>
                                 <select class="form-select" id="location" name="locationId" th:field="*{locationId}" required>
                                     <option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.id}"></option>
@@ -36,31 +28,36 @@
                                 <p th:if="${#fields.hasErrors('locationId')}" class="text-danger" th:errors="*{locationId}"></p>
                             </div>
                             <div class="mb-3">
-                                <label for="startTime" class="form-label">Start Time</label>
-                                <input type="datetime-local" class="form-control" id="startTime" name="startTime" th:value="${formattedStartTime}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="endTime" class="form-label">End Time</label>
-                                <input type="datetime-local" class="form-control" id="endTime" name="endTime" th:value="${formattedEndTime}" required>
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" th:value="${startDate}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="appointmentStatus" class="form-label">Status</label>
-                                <select class="form-select" id="appointmentStatus" name="appointmentStatus" th:field="*{appointmentStatus}" required>
-                                    <option th:value="PENDING_TRAINER" th:text="'PENDING_TRAINER'">PENDING_TRAINER</option>
-                                    <option th:value="SCHEDULED" th:text="'SCHEDULED'">SCHEDULED</option>
-                                    <option th:value="COMPLETED" th:text="'COMPLETED'">COMPLETED</option>
-                                    <option th:value="CANCELLED" th:text="'CANCELLED'">CANCELLED</option>
-                                    <option th:value="NO_SHOW" th:text="'NO_SHOW'">NO_SHOW</option>
+                                <label for="startHour" class="form-label">Start Hour</label>
+                                <select class="form-select" id="startHour" name="startHour" required>
+                                    <option value="" disabled>Select an hour</option>
+                                    <option value="07:00" th:selected="${startHour == '07:00'}">07:00</option>
+                                    <option value="08:00" th:selected="${startHour == '08:00'}">08:00</option>
+                                    <option value="09:00" th:selected="${startHour == '09:00'}">09:00</option>
+                                    <option value="10:00" th:selected="${startHour == '10:00'}">10:00</option>
+                                    <option value="11:00" th:selected="${startHour == '11:00'}">11:00</option>
+                                    <option value="12:00" th:selected="${startHour == '12:00'}">12:00</option>
+                                    <option value="13:00" th:selected="${startHour == '13:00'}">13:00</option>
+                                    <option value="14:00" th:selected="${startHour == '14:00'}">14:00</option>
+                                    <option value="15:00" th:selected="${startHour == '15:00'}">15:00</option>
+                                    <option value="16:00" th:selected="${startHour == '16:00'}">16:00</option>
+                                    <option value="17:00" th:selected="${startHour == '17:00'}">17:00</option>
+                                    <option value="18:00" th:selected="${startHour == '18:00'}">18:00</option>
+                                    <option value="19:00" th:selected="${startHour == '19:00'}">19:00</option>
+                                    <option value="20:00" th:selected="${startHour == '20:00'}">20:00</option>
+                                    <option value="21:00" th:selected="${startHour == '21:00'}">21:00</option>
+                                    <option value="22:00" th:selected="${startHour == '22:00'}">22:00</option>
                                 </select>
-                                <p th:if="${#fields.hasErrors('appointmentStatus')}" class="text-danger" th:errors="*{appointmentStatus}"></p>
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>
                                 <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
                             </div>
-
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </div>

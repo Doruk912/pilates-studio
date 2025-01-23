@@ -17,4 +17,6 @@ public interface TrainerService{
     void delete(Integer trainerId);
 
     Trainer findTrainerByName(String trainerName);
+
+    Trainer findTrainer(Integer trainerId);
 }

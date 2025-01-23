@@ -101,13 +101,14 @@
 
         <div class="row d-flex">
             <!-- Room Schedule -->
-            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+            <div class="col-xl-3 col-md-6 mb-4 d-flex">
                 <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
                     <div class="card-header bg-secondary text-white">
                         <h5 class="mb-0 text-center">Room Schedule</h5>
                     </div>
                     <div class="card-body flex-grow-1">
                         <form action="/downloadRoomSchedule" method="get" id="roomScheduleForm" target="_blank" onsubmit="return validateRoomScheduleForm()">
+                            <!-- Form fields remain the same -->
                             <div class="form-group mb-3">
                                 <label for="franchise" class="form-label">Franchise:</label>
                                 <select id="franchise" name="franchise" class="form-control shadow-sm"
@@ -132,15 +133,13 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="roomScheduleForm">Download
-                            PDF
-                        </button>
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="roomScheduleForm">Download PDF</button>
                     </div>
                 </div>
             </div>
 
             <!-- Trainer Schedule -->
-            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+            <div class="col-xl-3 col-md-6 mb-4 d-flex">
                 <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
                     <div class="card-header bg-secondary text-white">
                         <h5 class="mb-0 text-center">Trainer Schedule</h5>
@@ -163,15 +162,13 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="trainerScheduleForm">
-                            Download PDF
-                        </button>
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="trainerScheduleForm">Download PDF</button>
                     </div>
                 </div>
             </div>
 
             <!-- Customer Package Details -->
-            <div class="col-xl-4 col-md-6 mb-4 d-flex">
+            <div class="col-xl-3 col-md-6 mb-4 d-flex">
                 <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
                     <div class="card-header bg-secondary text-white">
                         <h5 class="mb-0 text-center">Customer Package Details</h5>
@@ -205,6 +202,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Payment Details -->
+            <div class="col-xl-3 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm border-0 bg-light flex-fill d-flex flex-column">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0 text-center">Payment Details</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <form action="/downloadPaymentDetails" method="get" id="paymentDetailsForm" target="_blank">
+                            <div class="form-group mb-3">
+                                <label for="purchaseId" class="form-label">Purchase ID:</label>
+                                <input type="number" id="purchaseId" name="purchaseId" class="form-control shadow-sm" placeholder="Enter Purchase ID" min="1" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-secondary w-100 shadow-sm" form="paymentDetailsForm">Download PDF</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Appointment List -->
@@ -222,7 +239,6 @@
                         <th>Trainer Name</th>
                         <th>Location</th>
                         <th>Start Time</th>
-                        <th>End Time</th>
                         <th>Status</th>
                         <th>Description</th>
                     </tr>
@@ -234,7 +250,6 @@
                         <th>Trainer Name</th>
                         <th>Location</th>
                         <th>Start Time</th>
-                        <th>End Time</th>
                         <th>Status</th>
                         <th>Description</th>
                     </tr>
@@ -246,7 +261,6 @@
                         <td th:text="${appointment.trainerName}"></td>
                         <td th:text="${appointment.locationId}"></td>
                         <td th:text="${#temporals.format(appointment.startTime, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${#temporals.format(appointment.endTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${appointment.appointmentStatus}"></td>
                         <td th:text="${appointment.description}"></td>
                     </tr>

@@ -38,13 +38,14 @@ public class LocationController {
     }
 
     @PostMapping("/locations/new")
-    public String saveLocation(@Valid @ModelAttribute("location") LocationDto locationDto, BindingResult result, Model model){
+    public String saveLocation(@Valid @ModelAttribute("location") LocationDto locationDto, BindingResult result, Model model, RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             model.addAttribute("location", locationDto);
             return "locations-create";
         }
         locationDto.setId(locationDto.getFranchise() + "-" + locationDto.getRoom() + "-" + locationDto.getSlot());
         locationService.saveLocation(locationDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Location created successfully");
         return "redirect:/locations";
     }
 

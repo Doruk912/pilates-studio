@@ -38,12 +38,14 @@ public class TrainerController {
     }
 
     @PostMapping("/trainers/new")
-    public String saveTrainer(@Valid @ModelAttribute("trainer") TrainerDto trainerDto, BindingResult result, Model model){
+    public String saveTrainer(@Valid @ModelAttribute("trainer") TrainerDto trainerDto, BindingResult result, Model model, RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             model.addAttribute("trainer", trainerDto);
             return "trainers-create";
         }
         trainerService.saveTrainer(trainerDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Trainer created successfully");
+
         return "redirect:/trainers";
     }
 

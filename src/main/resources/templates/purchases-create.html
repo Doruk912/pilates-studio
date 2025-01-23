@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>New Customer</title>
+    <title>New Purchase</title>
 </head>
 <main layout:fragment="content">
     <div class="container mt-5">
@@ -28,18 +28,10 @@
                                 <p th:if="${#fields.hasErrors('lessonCount')}" class="text-danger" th:errors="*{lessonCount}"></p>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Is Payment Complete?</label>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="paymentCompleteYes" name="paymentComplete" value="true" th:field="*{paymentComplete}">
-                                    <label class="form-check-label" for="paymentCompleteYes">Yes</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="paymentCompleteNo" name="paymentComplete" value="false" th:field="*{paymentComplete}">
-                                    <label class="form-check-label" for="paymentCompleteNo">No</label>
-                                </div>
-                                <p th:if="${#fields.hasErrors('paymentComplete')}" class="text-danger" th:errors="*{paymentComplete}"></p>
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" th:field="*{price}" min="1" step="0.01" required>
+                                <p th:if="${#fields.hasErrors('price')}" class="text-danger" th:errors="*{price}"></p>
                             </div>
-
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>

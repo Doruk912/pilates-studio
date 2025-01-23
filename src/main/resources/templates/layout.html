@@ -17,7 +17,10 @@
 <body>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="dashboard">Pilates Can Studio</a>
+    <!--<a class="navbar-brand ps-3" href="dashboard">Pilates Can Studio</a>-->
+    <a class="navbar-brand ps-3" href="dashboard">
+        <img src="/assets/img/logo.jpg" alt="Logo" style="height: 30px; margin-right: 10px;"> Pilates Can Studio
+    </a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
@@ -70,6 +73,10 @@
                     <a class="nav-link" href="purchases" th:href="@{/purchases}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                         Purchases
+                    </a>
+                    <a class="nav-link" href="payments" th:href="@{/payments}">
+                        <div class="sb-nav-link-icon"><i class="fa-solid fa-credit-card"></i></div>
+                        Payments
                     </a>
                 </div>
             </div>

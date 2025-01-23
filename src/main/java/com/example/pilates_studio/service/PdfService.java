@@ -1,8 +1,10 @@
 package com.example.pilates_studio.service;
 
 import com.example.pilates_studio.dto.AppointmentDto;
+import com.example.pilates_studio.dto.PaymentDto;
 import com.example.pilates_studio.dto.PurchaseDto;
 import com.example.pilates_studio.dto.TrainerDto;
+import com.example.pilates_studio.model.Payment;
 import com.example.pilates_studio.model.Purchase;
 import com.example.pilates_studio.model.Trainer;
 import com.itextpdf.text.*;
@@ -31,6 +33,8 @@ public class PdfService {
     CustomerService customerService;
     @Autowired
     PurchaseService purchaseService;
+    @Autowired
+    PaymentService paymentService;
 
 
     public ByteArrayInputStream generateRoomSchedulePdf(String franchise, String room, LocalDate date) {
@@ -432,6 +436,112 @@ public class PdfService {
                     cell.setPadding(5);
                     table.addCell(cell);
                 }
+            }
+
+            document.add(table);
+            document.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream generatePaymentDetailsPdf(Integer purchaseId) {
+        List<Payment> payments = paymentService.findPaymentsByPurchaseId(purchaseId);
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try{
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Image logo = Image.getInstance("src/main/resources/static/assets/img/logo.jpg");
+            logo.setAbsolutePosition(30, 770);
+            logo.scaleToFit(50, 50);
+            document.add(logo);
+
+            Font dateTimeFont = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
+            Paragraph dateTime = new Paragraph(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm")), dateTimeFont);
+            dateTime.setAlignment(Element.ALIGN_RIGHT);
+            document.add(dateTime);
+
+            if(payments.isEmpty()){
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph(" "));
+                Font errorFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.RED);
+                Paragraph errorMessage = new Paragraph("Error: No payments found for the given purchase ID: " + purchaseId, errorFont);
+                errorMessage.setAlignment(Element.ALIGN_CENTER);
+                document.add(errorMessage);
+                document.close();
+                return new ByteArrayInputStream(out.toByteArray());
+            }
+
+            Paragraph customer = new Paragraph("Customer: " + payments.getFirst().getPurchase().getCustomer().getName(), dateTimeFont);
+            customer.setAlignment(Element.ALIGN_RIGHT);
+            document.add(customer);
+
+            Paragraph price = new Paragraph("Total Price: " + payments.getFirst().getPurchase().getPrice(), dateTimeFont);
+            price.setAlignment(Element.ALIGN_RIGHT);
+            document.add(price);
+
+            Paragraph paidAmount = new Paragraph("Total Paid Amount: " + payments.getLast().getTotalPaidAmount(), dateTimeFont);
+            paidAmount.setAlignment(Element.ALIGN_RIGHT);
+            document.add(paidAmount);
+
+            Paragraph amountDue = new Paragraph("Amount Due: " + payments.getLast().getAmountDue(), dateTimeFont);
+            amountDue.setAlignment(Element.ALIGN_RIGHT);
+            document.add(amountDue);
+
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+            Paragraph title = new Paragraph("Payment Details for Purchase ID " + purchaseId, headerFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(new Paragraph(" "));
+            document.add(title);
+
+            document.add(new Paragraph(" "));
+            PdfPTable table = new PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{50, 50, 200, 200, 200});
+
+            Stream.of("No", "Id", "Amount", "Date", "Payment Method")
+                    .forEach(headerTitle -> {
+                        PdfPCell headerCell = new PdfPCell();
+                        headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        headerCell.setPadding(5);
+                        Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8);
+                        headerCell.setPhrase(new Phrase(headerTitle, headFont));
+                        table.addCell(headerCell);
+                    });
+
+            Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 8);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy");
+
+            for(int i = 0; i < payments.size(); i++) {
+                Payment payment = payments.get(i);
+                PdfPCell cell;
+
+                cell = new PdfPCell(new Phrase(String.valueOf(i + 1), cellFont));
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(payment.getId().toString(), cellFont));
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(payment.getAmount().toString(), cellFont));
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(payment.getPaymentDate().format(formatter), cellFont));
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(payment.getPaymentMethod().toString(), cellFont));
+                cell.setPadding(5);
+                table.addCell(cell);
             }
 
             document.add(table);

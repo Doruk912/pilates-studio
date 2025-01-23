@@ -55,6 +55,11 @@ public class TrainerServiceImpl implements TrainerService{
         return trainerRepository.findByName(trainerName);
     }
 
+    @Override
+    public Trainer findTrainer(Integer trainerId) {
+        return trainerRepository.findById(trainerId).get();
+    }
+
     private Trainer mapToTrainer(TrainerDto trainerDto){
         return Trainer.builder()
                 .id(trainerDto.getId())

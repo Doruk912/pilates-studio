@@ -58,12 +58,13 @@ public class CustomerController {
     }
 
     @PostMapping("/customers/{customerId}/edit")
-    public String updateCustomer(@PathVariable("customerId") Integer customerId, @Valid @ModelAttribute("customer") CustomerDto customerDto, BindingResult result){
+    public String updateCustomer(@PathVariable("customerId") Integer customerId, @Valid @ModelAttribute("customer") CustomerDto customerDto, BindingResult result , RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             return "customers-edit";
         }
         customerDto.setId(customerId);
         customerService.updateCustomer(customerDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Customer updated successfully");
         return "redirect:/customers";
     }
 

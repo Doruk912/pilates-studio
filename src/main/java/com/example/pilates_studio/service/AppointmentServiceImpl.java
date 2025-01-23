@@ -1,6 +1,7 @@
 package com.example.pilates_studio.service;
 
 import com.example.pilates_studio.dto.AppointmentDto;
+import com.example.pilates_studio.dto.TrainerDto;
 import com.example.pilates_studio.model.*;
 import com.example.pilates_studio.repository.AppointmentRepository;
 import com.example.pilates_studio.repository.PurchaseRepository;
@@ -50,6 +51,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    public Appointment findAppointment(Integer appointmentId) {
+        return appointmentRepository.findById(appointmentId).get();
+    }
+
+    @Override
     public String findCustomerNameFromAppointmentId(Integer appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId).get();
         return appointment.getCustomer().getName();
@@ -59,6 +65,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public void updateAppointment(AppointmentDto appointmentDto) {
         Appointment appointment = mapToAppointment(appointmentDto);
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public void updateAppointment(Appointment appointment) {
         appointmentRepository.save(appointment);
     }
 
@@ -122,6 +133,26 @@ public class AppointmentServiceImpl implements AppointmentService{
         return appointments.stream()
                 .map(this::mapToAppointmentDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(Integer appointmentId) {
+        appointmentRepository.deleteById(appointmentId);
+    }
+
+    @Override
+    public void updateStatus(Integer id, AppointmentStatus appointmentStatus) {
+        Appointment appointment = appointmentRepository.findById(id).get();
+        appointment.setAppointmentStatus(appointmentStatus);
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public void assignTrainer(Integer appointmentId, Integer trainerId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).get();
+        Trainer trainer = trainerService.findTrainer(trainerId);
+        appointment.setTrainer(trainer);
+        appointmentRepository.save(appointment);
     }
 
     private Appointment mapToAppointment(AppointmentDto appointmentDto) {
