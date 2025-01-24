@@ -268,6 +268,10 @@ public class AppointmentController {
             redirectAttributes.addFlashAttribute("errorMessage", "Cannot mark a completed appointment as no show.");
             return "redirect:/appointments";
         }
+        if(appointmentService.findAppointmentById(id).getAppointmentStatus() == AppointmentStatus.CANCELLED){
+            redirectAttributes.addFlashAttribute("errorMessage", "Cannot mark a cancelled appointment as no show.");
+            return "redirect:/appointments";
+        }
         appointmentService.updateStatus(id, AppointmentStatus.NO_SHOW);
         redirectAttributes.addFlashAttribute("successMessage", "Appointment marked as no show.");
         return "redirect:/appointments";
