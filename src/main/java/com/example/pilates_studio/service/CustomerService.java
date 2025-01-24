@@ -22,4 +22,6 @@ public interface CustomerService{
     Customer findCustomerModelById(Integer id);
 
     int countTotalCustomers();
+
+    void incrementUsage(Integer id);
 }

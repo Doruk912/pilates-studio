@@ -44,4 +44,6 @@ public interface AppointmentService {
     void updateStatus(Integer id, AppointmentStatus appointmentStatus);
 
     void assignTrainer(Integer appointmentId, Integer trainerId);
+
+    Appointment findAppointmentModelById(Integer id);
 }

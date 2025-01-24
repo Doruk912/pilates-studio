@@ -54,6 +54,13 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    public void incrementUsage(Integer id) {
+        Customer customer = customerRepository.findById(id).get();
+        customer.setRemainingUsage(customer.getRemainingUsage() + 1);
+        customerRepository.save(customer);
+    }
+
+    @Override
     public void updateCustomer(CustomerDto customerDto) {
         Customer customer = mapToCustomer(customerDto);
         customerRepository.save(customer);

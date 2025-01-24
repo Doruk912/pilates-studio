@@ -155,6 +155,11 @@ public class AppointmentServiceImpl implements AppointmentService{
         appointmentRepository.save(appointment);
     }
 
+    @Override
+    public Appointment findAppointmentModelById(Integer id) {
+        return appointmentRepository.findById(id).get();
+    }
+
     private Appointment mapToAppointment(AppointmentDto appointmentDto) {
         Customer customer = customerService.findCustomerByName(appointmentDto.getCustomerName());
         Trainer trainer = trainerService.findTrainerByName(appointmentDto.getTrainerName());

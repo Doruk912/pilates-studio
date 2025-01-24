@@ -5,6 +5,7 @@ import com.example.pilates_studio.dto.CustomerDto;
 import com.example.pilates_studio.dto.TrainerDto;
 import com.example.pilates_studio.model.Appointment;
 import com.example.pilates_studio.model.AppointmentStatus;
+import com.example.pilates_studio.model.Customer;
 import com.example.pilates_studio.model.Trainer;
 import com.example.pilates_studio.service.*;
 import jakarta.validation.Valid;
@@ -248,8 +249,12 @@ public class AppointmentController {
             redirectAttributes.addFlashAttribute("errorMessage", "Cannot mark a completed appointment as cancelled.");
             return "redirect:/appointments";
         }
+
+        Appointment appointment = appointmentService.findAppointmentModelById(id);
+        Customer customer = appointment.getCustomer();
+        customerService.incrementUsage(customer.getId());
         appointmentService.updateStatus(id, AppointmentStatus.CANCELLED);
-        redirectAttributes.addFlashAttribute("successMessage", "Appointment marked as cancelled.");
+        redirectAttributes.addFlashAttribute("successMessage", "Appointment marked as cancelled. Usage refunded to customer.");
         return "redirect:/appointments";
     }
 
